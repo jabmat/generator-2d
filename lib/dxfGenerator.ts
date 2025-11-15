@@ -1,8 +1,7 @@
-export function exportDXF(width, height) {
-	function n(v) {
+export function generateRectangleDXF(width: number, height: number): string {
+	function n(v: number) {
 		return String(v);
 	}
-
 	let dxf = [
 		// HEADER
 		'0',
