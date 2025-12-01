@@ -2,19 +2,20 @@
 
 import { useState } from 'react';
 import { generateRectangleDXF } from '@/lib/dxfGenerator';
+import CanvasPreview from './CanvasPreview';
+
+import { Button } from './ui/Button';
+import { Input } from './ui/Input';
+import { FormRow } from './ui/FormRow';
+import { Heading } from './ui/Heading';
+import { AcadWrapper } from './ui/AcadBox';
 
 export default function DxfForm() {
 	const [width, setWidth] = useState<number | ''>('');
 	const [height, setHeight] = useState<number | ''>('');
 
 	const handleGenerate = () => {
-		if (width === '' || height === '') {
-			alert('Podaj szerokość i wysokość!');
-			return;
-		}
-
-		const dxf = generateRectangleDXF(width, height);
-
+		const dxf = generateRectangleDXF(width as number, height as number);
 		const blob = new Blob([dxf], { type: 'text/plain' });
 		const url = URL.createObjectURL(blob);
 
@@ -26,40 +27,43 @@ export default function DxfForm() {
 		URL.revokeObjectURL(url);
 	};
 
+	const toNumber = (val: string): number | '' =>
+		val === '' ? '' : Number(val);
+
 	return (
 		<div>
-			<h2>Generator prostokąta DXF (R12)</h2>
-			<div>
-				<label>
-					Szerokość:
-					<input
-						type="number"
-						min="0"
-						value={width}
-						onChange={(e) => {
-							const val = e.target.value;
-							setWidth(val === '' ? '' : Number(val));
-						}}
-					/>
-				</label>
-			</div>
+			<Heading level={2}>Prostokąt</Heading>
+			<FormRow htmlFor="width" label="Szerokość:">
+				<Input
+					id="width"
+					type="number"
+					min="0"
+					value={width}
+					onChange={(e) => {
+						setWidth(toNumber(e.target.value));
+					}}
+				/>
+			</FormRow>
 
-			<div>
-				<label>
-					Wysokość:
-					<input
-						type="number"
-						min="0"
-						value={height}
-						onChange={(e) => {
-							const val = e.target.value;
-							setHeight(val === '' ? '' : Number(val));
-						}}
-					/>
-				</label>
-			</div>
+			<FormRow htmlFor="height" label="Wysokość:">
+				<Input
+					id="height"
+					type="number"
+					min="0"
+					value={height}
+					onChange={(e) => {
+						setHeight(toNumber(e.target.value));
+					}}
+				/>
+			</FormRow>
 
-			<button onClick={handleGenerate}>Pobierz DXF</button>
+			<AcadWrapper>
+				<CanvasPreview width={width} height={height} />
+			</AcadWrapper>
+
+			<Button onClick={handleGenerate} disabled={width === '' || height === ''}>
+				Pobierz DXF
+			</Button>
 		</div>
 	);
 }

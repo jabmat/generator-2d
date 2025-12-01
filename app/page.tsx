@@ -1,13 +1,21 @@
 import DxfForm from '@/components/DxfForm';
 import Image from 'next/image';
+import { Heading } from '@/components/ui/Heading';
 
 export default function Home() {
 	return (
 		<>
-			<main>
-				<h1>To jest DXF Generator szmato.</h1>
+			<header className="p-4 text-center">
+				{/* <h1>DXF Generator (R12)</h1> */}
+				<Heading>DXF Generator (R12)</Heading>
+			</header>
+			<main className="container-width m-auto p-4 flex-1">
 				<DxfForm />
 			</main>
+			<footer className="p-4 text-center text-sm text-neutral-500 border-t border-gray-300">
+				<div className="mb-1">M. Jabłoński</div>
+				<div>Wszystkie prawa zastrzeżone</div>
+			</footer>
 		</>
 		// <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
 		// 	<main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
