@@ -30,6 +30,11 @@ export default function DxfForm() {
 	const toNumber = (val: string): number | '' =>
 		val === '' ? '' : Number(val);
 
+	const handleReset = () => {
+		setWidth('');
+		setHeight('');
+	};
+
 	return (
 		<div>
 			<Heading level={2}>Prostokąt</Heading>
@@ -63,6 +68,12 @@ export default function DxfForm() {
 
 			<Button onClick={handleGenerate} disabled={width === '' || height === ''}>
 				Pobierz DXF
+			</Button>
+			<Button
+				variant="secondary"
+				onClick={handleReset}
+				disabled={width === '' && height === ''}>
+				Wyczyść
 			</Button>
 		</div>
 	);

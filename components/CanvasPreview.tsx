@@ -42,5 +42,5 @@ export default function CanvasPreview({ width, height }: CanvasPreviewProps) {
 		ctx.stroke();
 	}, [width, height]);
 
-	return <canvas ref={canvasRef} width={300} height={300} />;
+	return <canvas ref={canvasRef} width={300} height={300} className='m-auto' />;
 }
