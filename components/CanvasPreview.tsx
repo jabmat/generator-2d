@@ -2,12 +2,12 @@
 
 import { useEffect, useRef } from 'react';
 
-interface CanvasPreviewProps {
+interface CanvasRectanglePreviewProps {
 	width: number | '';
 	height: number | '';
 }
 
-export default function CanvasPreview({ width, height }: CanvasPreviewProps) {
+export function CanvasRectanglePreview({ width, height }: CanvasRectanglePreviewProps) {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 
 	useEffect(() => {
