@@ -2,13 +2,17 @@
 
 import { useState } from 'react';
 import { generateRectangleDXF } from '@/lib/dxfGenerator';
-import CanvasPreview from './CanvasPreview';
+import { CanvasRectanglePreview } from './CanvasPreview';
 
+// optional - example
 import { Button } from './ui/Button';
 import { Input } from './ui/Input';
 import { FormRow } from './ui/FormRow';
 import { Heading } from './ui/Heading';
 import { AcadWrapper } from './ui/AcadBox';
+// optional - example
+
+import { FormGenerator } from './FormGenerator';
 
 export default function DxfForm() {
 	const [width, setWidth] = useState<number | ''>('');
@@ -37,7 +41,30 @@ export default function DxfForm() {
 
 	return (
 		<div>
-			<Heading level={2}>Prostokąt</Heading>
+			<FormGenerator
+				id="rectangle"
+				title="Prostokąt"
+				paramsConfig={[
+					{ key: 'width', label: 'Szerokość:' },
+					{ key: 'height', label: 'Wysokość:' },
+				]}
+				renderPreview={(params) => (
+					<CanvasRectanglePreview width={params.width} height={params.height} />
+				)}
+				generateFn={generateRectangleDXF}
+			/>
+			{/* TODO - OKRĄG */}
+			<FormGenerator
+				id="circle"
+				title="Okrąg"
+				paramsConfig={[{ key: 'diameter', label: 'Średnica:' }]}
+				renderPreview={(params) => (
+					<CanvasRectanglePreview width={params.width} height={params.height} />
+				)}
+				generateFn={generateRectangleDXF}
+			/>
+			{/* EXAMPLE */}
+			{/* <Heading level={2}>Prostokąt</Heading>
 			<FormRow htmlFor="width" label="Szerokość:">
 				<Input
 					id="width"
@@ -63,7 +90,7 @@ export default function DxfForm() {
 			</FormRow>
 
 			<AcadWrapper>
-				<CanvasPreview width={width} height={height} />
+				<CanvasRectanglePreview width={width} height={height} />
 			</AcadWrapper>
 
 			<Button onClick={handleGenerate} disabled={width === '' || height === ''}>
@@ -74,7 +101,8 @@ export default function DxfForm() {
 				onClick={handleReset}
 				disabled={width === '' && height === ''}>
 				Wyczyść
-			</Button>
+			</Button> */}
+			{/* EXAMPLE */}
 		</div>
 	);
 }

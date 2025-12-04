@@ -1,21 +1,13 @@
 'use client';
 
-type InputProps = {
-	id?: string;
-	type?: string;
-	min?: string;
-	value?: string | number;
-	onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-};
+type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
 
-export const Input = ({ type, min, value, id, onChange }: InputProps) => {
+export const Input = ({ type = 'number', min = '0', ...props }: InputProps) => {
 	return (
 		<input
-			id={id}
 			type={type}
 			min={min}
-			value={value}
-			onChange={onChange}
+			{...props}
 			className="px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-gray-500"
 		/>
 	);
