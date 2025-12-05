@@ -7,7 +7,10 @@ interface CanvasRectanglePreviewProps {
 	height: number | '';
 }
 
-export function CanvasRectanglePreview({ width, height }: CanvasRectanglePreviewProps) {
+export function CanvasRectanglePreview({
+	width,
+	height,
+}: CanvasRectanglePreviewProps) {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 
 	useEffect(() => {
@@ -23,8 +26,14 @@ export function CanvasRectanglePreview({ width, height }: CanvasRectanglePreview
 		// Jeśli width/height są puste, nic nie rysujemy
 		if (width === '' || height === '') return;
 
+		const padding = 10;
+
+		// maksymalne wymiary prostokąta, żeby zmieścił się w canvasie z paddingiem
+		const maxWidth = canvas.width - 2 * padding;
+		const maxHeight = canvas.height - 2 * padding;
+
 		// Skalowanie, żeby zmieścić prostokąt w canvasie
-		const scale = Math.min(canvas.width / width, canvas.height / height, 1);
+		const scale = Math.min(maxWidth / width, maxHeight / height, 1);
 
 		const rectWidth = width * scale;
 		const rectHeight = height * scale;
@@ -42,5 +51,44 @@ export function CanvasRectanglePreview({ width, height }: CanvasRectanglePreview
 		ctx.stroke();
 	}, [width, height]);
 
-	return <canvas ref={canvasRef} width={300} height={300} className='m-auto' />;
+	return <canvas ref={canvasRef} width={300} height={300} className="m-auto" />;
+}
+
+interface CanvasCirclePreviewProps {
+	diameter: number | '';
+}
+
+export function CanvasCirclePreview({ diameter }: CanvasCirclePreviewProps) {
+	const canvasRef = useRef<HTMLCanvasElement>(null);
+
+	useEffect(() => {
+		const canvas = canvasRef.current;
+		if (!canvas) return;
+
+		const ctx = canvas.getContext('2d');
+		if (!ctx) return;
+
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+		if (diameter === '') return;
+
+		const padding = 10;
+
+		const radius = diameter / 2;
+		const maxDiameter = Math.min(canvas.width, canvas.height) - 2 * padding;
+		const scale = Math.min(maxDiameter / diameter, 1);
+		const scaledRadius = radius * scale;
+
+		const centerX = canvas.width / 2;
+		const centerY = canvas.height / 2;
+
+		ctx.strokeStyle = '#00FFFF';
+		ctx.lineWidth = 1;
+
+		ctx.beginPath();
+		ctx.arc(centerX, centerY, scaledRadius, 0, 2 * Math.PI);
+		ctx.stroke();
+	}, [diameter]);
+
+	return <canvas ref={canvasRef} width={300} height={300} className="m-auto" />;
 }
