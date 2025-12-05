@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { generateRectangleDXF } from '@/lib/dxfGenerator';
-import { CanvasRectanglePreview } from './CanvasPreview';
+import { generateCircleDXF, generateRectangleDXF } from '@/lib/dxfGenerator';
+import { CanvasCirclePreview, CanvasRectanglePreview } from './CanvasPreview';
 
 // optional - example
 import { Button } from './ui/Button';
@@ -59,9 +59,9 @@ export default function DxfForm() {
 				title="Okrąg"
 				paramsConfig={[{ key: 'diameter', label: 'Średnica:' }]}
 				renderPreview={(params) => (
-					<CanvasRectanglePreview width={params.width} height={params.height} />
+					<CanvasCirclePreview diameter={params.diameter} />
 				)}
-				generateFn={generateRectangleDXF}
+				generateFn={generateCircleDXF}
 			/>
 			{/* EXAMPLE */}
 			{/* <Heading level={2}>Prostokąt</Heading>
