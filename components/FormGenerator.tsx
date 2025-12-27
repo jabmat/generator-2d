@@ -20,6 +20,12 @@ type FormGeneratorProps = {
 	generateFn: (...args: number[]) => string;
 	onParamsChange?: (params: Record<string, number | ''>) => void;
 	renderPreview?: (params: Record<string, number | ''>) => React.ReactNode;
+	params: Record<string, number | ''>;
+	setParams: (params: Record<string, number | ''>) => void;
+	// Nowe propsy
+	onClear: () => void;
+	onGlobalReset: () => void;
+	isAnythingFilled: boolean;
 };
 
 export function FormGenerator({
@@ -29,13 +35,12 @@ export function FormGenerator({
 	onParamsChange,
 	renderPreview,
 	generateFn,
+	params,
+	setParams,
+	onClear,
+	onGlobalReset,
+	isAnythingFilled,
 }: FormGeneratorProps) {
-	const initialState: Record<string, number | ''> = Object.fromEntries(
-		paramsConfig.map<[string, number | '']>((p) => [p.key, ''])
-	);
-	const [params, setParams] =
-		useState<Record<string, number | ''>>(initialState);
-
 	const toNumber = (val: string): number | '' =>
 		val === '' ? '' : Number(val);
 
@@ -62,10 +67,6 @@ export function FormGenerator({
 		URL.revokeObjectURL(url);
 	};
 
-	const handleReset = () => {
-		setParams(initialState);
-	};
-
 	return (
 		<div id={id} className="mb-6">
 			<Heading level={2}>{title}</Heading>
@@ -79,12 +80,21 @@ export function FormGenerator({
 				</FormRow>
 			))}
 			{renderPreview && <AcadWrapper>{renderPreview(params)}</AcadWrapper>}
-			<Button onClick={handleGenerate} disabled={disableDownload}>
-				Pobierz DXF
-			</Button>
-			<Button variant="secondary" onClick={handleReset} disabled={disableReset}>
-				Wyczyść
-			</Button>
+			{/* Div grupujący przyciski ze zwartym stylem */}
+			<div className="flex flex-wrap gap-2 pt-2">
+				<Button onClick={handleGenerate} disabled={disableDownload}>
+					Pobierz DXF
+				</Button>
+				<Button onClick={onClear} disabled={disableReset} variant="secondary">
+					Wyczyść
+				</Button>
+				<Button
+					onClick={onGlobalReset}
+					disabled={!isAnythingFilled}
+					variant="secondary">
+					Resetuj
+				</Button>
+			</div>
 		</div>
 	);
 }

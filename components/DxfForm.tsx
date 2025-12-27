@@ -2,42 +2,37 @@
 
 import { useState } from 'react';
 import { generateCircleDXF, generateRectangleDXF } from '@/lib/dxfGenerator';
-import { CanvasCirclePreview, CanvasRectanglePreview } from './CanvasPreview';
-
-// optional - example
-import { Button } from './ui/Button';
-import { Input } from './ui/Input';
-import { FormRow } from './ui/FormRow';
-import { Heading } from './ui/Heading';
-import { AcadWrapper } from './ui/AcadBox';
-// optional - example
-
+import {
+	CanvasCirclePreview,
+	CanvasRectanglePreview,
+} from '@/components/CanvasPreview';
 import { FormGenerator } from './FormGenerator';
 
+// Definiujemy początkowe, puste stany dla formularzy
+// Z JAWNĄ ADNOTACJĄ TYPU, aby TypeScript wiedział, czego się spodziewać
+const initialRectangleParams: Record<string, number | ''> = {
+	width: '',
+	height: '',
+};
+const initialCircleParams: Record<string, number | ''> = { diameter: '' };
+
 export default function DxfForm() {
-	const [width, setWidth] = useState<number | ''>('');
-	const [height, setHeight] = useState<number | ''>('');
+	// Tworzymy stany dla parametrów prostokąta i okręgu
+	const [rectangleParams, setRectangleParams] = useState(
+		initialRectangleParams
+	);
+	const [circleParams, setCircleParams] = useState(initialCircleParams);
 
-	const handleGenerate = () => {
-		const dxf = generateRectangleDXF(width as number, height as number);
-		const blob = new Blob([dxf], { type: 'text/plain' });
-		const url = URL.createObjectURL(blob);
-
-		const a = document.createElement('a');
-		a.href = url;
-		a.download = `rectangle-${width}-${height}.dxf`;
-		a.click();
-
-		URL.revokeObjectURL(url);
+	// Funkcja do globalnego resetowania obu formularzy
+	const handleGlobalReset = () => {
+		setRectangleParams(initialRectangleParams);
+		setCircleParams(initialCircleParams);
 	};
 
-	const toNumber = (val: string): number | '' =>
-		val === '' ? '' : Number(val);
-
-	const handleReset = () => {
-		setWidth('');
-		setHeight('');
-	};
+	// Sprawdzamy, czy jakiekolwiek pole w którymkolwiek formularzu jest wypełnione
+	const isAnythingFilled =
+		Object.values(rectangleParams).some((value) => value !== '') ||
+		Object.values(circleParams).some((value) => value !== '');
 
 	return (
 		<div>
@@ -52,8 +47,13 @@ export default function DxfForm() {
 					<CanvasRectanglePreview width={params.width} height={params.height} />
 				)}
 				generateFn={generateRectangleDXF}
+				params={rectangleParams}
+				setParams={setRectangleParams}
+				// Nowe propsy do obsługi przycisków
+				onClear={() => setRectangleParams(initialRectangleParams)}
+				onGlobalReset={handleGlobalReset}
+				isAnythingFilled={isAnythingFilled}
 			/>
-			{/* TODO - OKRĄG */}
 			<FormGenerator
 				id="circle"
 				title="Okrąg"
@@ -62,47 +62,13 @@ export default function DxfForm() {
 					<CanvasCirclePreview diameter={params.diameter} />
 				)}
 				generateFn={generateCircleDXF}
+				params={circleParams}
+				setParams={setCircleParams}
+				// Nowe propsy do obsługi przycisków
+				onClear={() => setCircleParams(initialCircleParams)}
+				onGlobalReset={handleGlobalReset}
+				isAnythingFilled={isAnythingFilled}
 			/>
-			{/* EXAMPLE */}
-			{/* <Heading level={2}>Prostokąt</Heading>
-			<FormRow htmlFor="width" label="Szerokość:">
-				<Input
-					id="width"
-					type="number"
-					min="0"
-					value={width}
-					onChange={(e) => {
-						setWidth(toNumber(e.target.value));
-					}}
-				/>
-			</FormRow>
-
-			<FormRow htmlFor="height" label="Wysokość:">
-				<Input
-					id="height"
-					type="number"
-					min="0"
-					value={height}
-					onChange={(e) => {
-						setHeight(toNumber(e.target.value));
-					}}
-				/>
-			</FormRow>
-
-			<AcadWrapper>
-				<CanvasRectanglePreview width={width} height={height} />
-			</AcadWrapper>
-
-			<Button onClick={handleGenerate} disabled={width === '' || height === ''}>
-				Pobierz DXF
-			</Button>
-			<Button
-				variant="secondary"
-				onClick={handleReset}
-				disabled={width === '' && height === ''}>
-				Wyczyść
-			</Button> */}
-			{/* EXAMPLE */}
 		</div>
 	);
 }
