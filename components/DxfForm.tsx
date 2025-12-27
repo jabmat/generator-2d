@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; // Importujemy useEffect
 import { generateCircleDXF, generateRectangleDXF } from '@/lib/dxfGenerator';
 import {
 	CanvasCirclePreview,
@@ -16,12 +16,26 @@ const initialRectangleParams: Record<string, number | ''> = {
 };
 const initialCircleParams: Record<string, number | ''> = { diameter: '' };
 
-export default function DxfForm() {
+// Definiujemy typy dla propsów
+type DxfFormProps = {
+	onAllParamsChange: (params: Record<string, number | ''>) => void;
+};
+
+export default function DxfForm({ onAllParamsChange }: DxfFormProps) {
 	// Tworzymy stany dla parametrów prostokąta i okręgu
 	const [rectangleParams, setRectangleParams] = useState(
 		initialRectangleParams
 	);
 	const [circleParams, setCircleParams] = useState(initialCircleParams);
+
+	// Używamy useEffect do śledzenia zmian i informowania rodzica
+	useEffect(() => {
+		const allParams = {
+			...rectangleParams,
+			...circleParams,
+		};
+		onAllParamsChange(allParams);
+	}, [rectangleParams, circleParams, onAllParamsChange]);
 
 	// Funkcja do globalnego resetowania obu formularzy
 	const handleGlobalReset = () => {
